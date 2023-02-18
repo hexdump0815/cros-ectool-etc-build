@@ -1,0 +1,52 @@
+diff --git a/Makefile b/Makefile
+index 3e07f151f4..19ec1aa744 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,7 +13,7 @@
+ # This is used to exclude build targets that depend on sanitizers such as
+ # fuzzers on architectures that don't support sanitizers yet (e.g. arm).
+ ARCH?=amd64
+-BOARD ?= elm
++BOARD ?= krane
+ 
+ # Directory where the board is configured (includes /$(BOARD) at the end)
+ BDIR:=$(wildcard board/$(BOARD))
+diff --git a/Makefile.toolchain b/Makefile.toolchain
+index fcb2dd4b00..e076fbfe98 100644
+--- a/Makefile.toolchain
++++ b/Makefile.toolchain
+@@ -197,7 +197,7 @@ ifeq ($(cc-name),gcc)
+ MEMSIZE_FLAGS+=-Wl,--print-memory-usage
+ endif
+ BUILD_LDFLAGS=$(LIBFTDIUSB_LDLIBS)
+-HOST_LDFLAGS=$(LIBFTDIUSB_LDLIBS)
++HOST_LDFLAGS=$(LIBFTDIUSB_LDLIBS) -lusb-1.0
+ HOST_TEST_LDFLAGS=-Wl,-T core/host/host_exe.lds -lrt -pthread -rdynamic -lm\
+ 		  -fuse-ld=bfd -no-pie \
+ 		  $(if $(TEST_COVERAGE), --coverage,) \
+diff --git a/util/comm-usb.c b/util/comm-usb.c
+index 232d39fe9e..64e3ca1bf2 100644
+--- a/util/comm-usb.c
++++ b/util/comm-usb.c
+@@ -6,7 +6,7 @@
+ #include <assert.h>
+ #include <endian.h>
+ #include <errno.h>
+-#include <libusb.h>
++#include <libusb-1.0/libusb.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+diff --git a/util/usb_if.h b/util/usb_if.h
+index 587880f483..570a8a224a 100644
+--- a/util/usb_if.h
++++ b/util/usb_if.h
+@@ -7,7 +7,7 @@
+ #ifndef __EC_EXTRA_USB_UPDATER_USB_IF_H
+ #define __EC_EXTRA_USB_UPDATER_USB_IF_H
+ 
+-#include <libusb.h>
++#include <libusb-1.0/libusb.h>
+ 
+ /* This describes USB endpoint used to communicate with Cr50. */
+ struct usb_endpoint {
